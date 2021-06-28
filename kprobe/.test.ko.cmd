@@ -1,0 +1,1 @@
+cmd_/home/sh/kernel/kprobe/test.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000  --build-id  -T ./scripts/module-common.lds -o /home/sh/kernel/kprobe/test.ko /home/sh/kernel/kprobe/test.o /home/sh/kernel/kprobe/test.mod.o;  true
