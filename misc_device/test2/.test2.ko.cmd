@@ -1,0 +1,1 @@
+cmd_/media/psf/Home/LearingLibrary/kernel/misc_device/test2/test2.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000  --build-id  -T ./scripts/module-common.lds -o /media/psf/Home/LearingLibrary/kernel/misc_device/test2/test2.ko /media/psf/Home/LearingLibrary/kernel/misc_device/test2/test2.o /media/psf/Home/LearingLibrary/kernel/misc_device/test2/test2.mod.o;  true

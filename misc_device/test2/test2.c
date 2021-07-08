@@ -1,3 +1,4 @@
+// misc 设备不同于普通的字符设备，它的主设备号一般都是10，因此不需要进行设备号的分配
 #include <linux/miscdevice.h>
 #include <linux/fs.h>
 #include <linux/uaccess.h>
@@ -5,7 +6,9 @@
 #include <linux/cdev.h>
 #include <linux/module.h>
 
-#define DEMO_NAME "demo_dev"
+#define DEMO_NAME "my_demo_dev"
+
+static struct device* mydemoedrv_device;
 
 static dev_t dev;
 static struct cdev *demo_cdev = NULL;
@@ -43,6 +46,7 @@ static const struct file_operations demodrv_fops = {
 
 //static struct device *mydemodrv_device;
 
+
 static struct miscdevice mydemodrv_misc_device = { // miscdevice结构体
     .minor = MISC_DYNAMIC_MINOR,
     .name = DEMO_NAME,
@@ -51,39 +55,20 @@ static struct miscdevice mydemodrv_misc_device = { // miscdevice结构体
 
 static int __init simple_char_init(void) {
     int ret;
-    ret = alloc_chrdev_region(&dev, 0, count, DEMO_NAME);
-    if (ret) {
-        printk("failed to allocate char device region\n");
+    ret = misc_register(&mydemodrv_misc_device);
+    if (ret)
+    {
+        printk("failed register misc device\n");
+        return ret;
     }
-    demo_cdev = cdev_alloc(); // 抽象设备分配
-    if (!demo_cdev) {
-        printk("cdev_alloc failed\n");
-        goto unregister_chrdev;
-    } 
-    cdev_init(demo_cdev, &demodrv_fops); //主要是对空间起到一个清零作用并较之cdev_alloc多了一个ops的赋值操作。
-    ret = cdev_add(demo_cdev, dev, count); 
-    if (ret) {
-        printk("cdev_add failed\n");
-        goto cdev_fail;
-    }
-    printk("succeeded register char device: %s\n" , DEMO_NAME);
-    printk("Major number = %d, minor number = %d\n", MAJOR(dev), MINOR(dev));
+    mydemoedrv_device = mydemodrv_misc_device.this_device;
+    printk("succeeded register char device: %s\n", DEMO_NAME);
     return 0;
-
-cdev_fail:
-    cdev_del(demo_cdev);
-
-unregister_chrdev:
-    unregister_chrdev_region(dev, count);
-    return ret;
 }
 
 static void __exit simple_char_exit(void) {
     printk("removing device\n");
-    if (demo_cdev) {
-        cdev_del(demo_cdev);
-    }
-    unregister_chrdev_region(demo_cdev, count);
+    misc_deregister(&mydemodrv_misc_device);
 }
 
 module_init(simple_char_init);
@@ -91,18 +76,3 @@ module_exit(simple_char_exit);
 MODULE_AUTHOR("Clock");
 MODULE_LICENSE("GPL v2");
 MODULE_DESCRIPTION("simple character device");
-/*static int __init simple_char_init(void ) {
-    int ret;
-    ret = misc_register(&mydemodrv_misc_device);
-    if (ret) {
-        printk("failed register misc device\n");
-    }
-    mydemodrv_device = mydemodrv_misc_device.this_device;
-    printk("succeeded register char device %s \n", DEMO_NAME);
-    return 0;
-}*/
-
-/*static void __exit simple_char_exit(void) {
-    printk("removing device %s\n", DEMO_NAME);
-    misc_deregister(&mydemodrv_misc_device);
-}*/
