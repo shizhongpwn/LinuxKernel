@@ -1,0 +1,1 @@
+cmd_/media/psf/Home/LearingLibrary/kernel/VirtualDevice/test.mod := { echo  /media/psf/Home/LearingLibrary/kernel/VirtualDevice/test.o;  echo; } > /media/psf/Home/LearingLibrary/kernel/VirtualDevice/test.mod
