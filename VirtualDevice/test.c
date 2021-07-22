@@ -10,7 +10,7 @@
 static dev_t dev;
 static struct cdev *demo_cdev = NULL;
 static signed count = 1;
-static char *device_buffer;
+static char device_buffer[1024];
 #define MAX_DEVICE_BUFFER_SIZE 64
 
 static int demodrv_open(struct inode *inode, struct file *file) {
