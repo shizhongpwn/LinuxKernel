@@ -58,6 +58,11 @@ static ssize_t demodrv_read(struct file *file, char __user *buf, size_t count, l
     printk("%s, actual_readed = %d, pos = %d\n", __func__, actual_readed, *ppos);
     return actual_readed;
     */
+   if (kfifo_is_empty(&mydemo_fifo)) {
+       if (file->f_flags & O_NONBLOCK) { // 这里采用非阻塞模式，如果缓冲区为空的话，那么直接结束读取操作而不被阻塞等待设备提供数据 
+           return -EAGAIN; // 但是仅仅
+       }
+   }
    // 使用KFIFO环形缓冲区
     int actual_readed;
     int ret;
@@ -90,6 +95,12 @@ static ssize_t demodrv_write(struct file *file, const char __user *buf, size_t c
     printk("%s: actual_write = %d, ppos = %d\n", __func__, actual_write, *ppos);
     return actual_write;
     */
+   if (kfifo_is_full(&mydemo_fifo)) {
+       if (file->f_flags & O_NONBLOCK) // 如果缓冲区已经满了，那么直接暂停，返回错误
+       {
+           return -EINVAL;
+       }
+   }
    // 这里使用kfifo环形缓冲区实现
    unsigned int actual_write;
    int ret;

@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
     char message[] = "Testing the virtual FIFO device";
     char *read_buffer = NULL;
     len = sizeof(message);
-    fd = open(DEMO_DEV_NAME, O_RDWR);
+    fd = open(DEMO_DEV_NAME, O_RDWR | O_NONBLOCK); //非阻塞模式读取
     if (fd < 0) { 
         printf("open device failed\n");
         return -1;

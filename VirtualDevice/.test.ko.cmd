@@ -1,1 +1,0 @@
-cmd_/media/psf/Home/LearingLibrary/kernel/VirtualDevice/test.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000  --build-id  -T ./scripts/module-common.lds -o /media/psf/Home/LearingLibrary/kernel/VirtualDevice/test.ko /media/psf/Home/LearingLibrary/kernel/VirtualDevice/test.o /media/psf/Home/LearingLibrary/kernel/VirtualDevice/test.mod.o;  true
