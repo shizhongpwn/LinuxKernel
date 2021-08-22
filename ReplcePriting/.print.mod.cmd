@@ -1,0 +1,1 @@
+cmd_/media/psf/Home/LearingLibrary/kernel/ReplcePriting/print.mod := { echo  /media/psf/Home/LearingLibrary/kernel/ReplcePriting/print.o;  echo; } > /media/psf/Home/LearingLibrary/kernel/ReplcePriting/print.mod
