@@ -1,5 +1,17 @@
 # Kernel-Rootkit测试
 
+## 前置技术
+
+### Linux kernel从inode结构得到文件路径
+
+​		为了适应各种的文件系统格式，Linux使用虚拟文件系统VFS，VFS提供一组标准的抽象的的文件操作，以系统调用的形式提供给用户使用。
+
+![image-20210825115023422](Kernel-Rootkit测试.assets/image-20210825115023422.png)
+
+​		每个文件系统都有自己的`file_operations`结构，这里全是函数指针。
+
+​		同时进程的`task_struct`中有一个`struct files_struct` 的files成员，记录了已经打开的文件的具体信息，`file_structs`的主体就是一个file结构体数组，进通过fd访问相应的文件。
+
 ## 测试一
 
 ### 问题一
